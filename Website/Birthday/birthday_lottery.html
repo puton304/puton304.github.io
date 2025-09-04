@@ -1,1 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎂 生日抽獎</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', '微軟正黑體', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .debug-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #333;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .debug-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .debug-info {
+            display: none;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 13px;
+            color: #333;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .debug-info.show {
+            display: block;
+        }
+        
+        .folders-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .folder {
+            background: linear-gradient(45deg, #ff9a9e, #fecfef);
+            border: none;
+            border-radius: 15px;
+            padding: 20px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            color: #333;
+            font-weight: bold;
+            min-width: 100px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .folder:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .folder:active {
+            transform: scale(0.95);
+        }
+        
+        .folder-icon {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .result.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .result.prize {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+        }
+        
+        .result.consolation {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+        }
+        
+        .prize-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .reset-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            .folders-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .folder {
+                width: 80%;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="title">🎂 生日抽獎</h1>
+        <button class="debug-btn" onclick="toggleDebug()"></button>
+        <p class="subtitle">選擇一個資料夾，看看你的生日驚喜！</p>
+
+        <div id="debugInfo" class="debug-info">
+            <strong>🔍 當前禮物：</strong><br>
+            <span id="debugContent"></span>
+        </div>
+
+        <div class="folders-container">
+            <button class="folder" onclick="drawPrize(1)">
+                <span class="folder-icon">📁</span>
+                資料夾 1
+            </button>
+            <button class="folder" onclick="drawPrize(2)">
+                <span class="folder-icon">📁</span>
+                資料夾 2
+            </button>
+            <button class="folder" onclick="drawPrize(3)">
+                <span class="folder-icon">📁</span>
+                資料夾 3
+            </button>
+        </div>
+
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        // 所有可能的禮物
+        const allPrizes = [{
+            name: "餐券一張",
+            icon: "🍽️",
+            type: "prize"
+        }, {
+            name: "行動電源",
+            icon: "🔋",
+            type: "prize"
+        }, {
+            name: "銘謝惠顧",
+            icon: "💝",
+            type: "consolation"
+        }];
+
+        let prizes = {};
+        let hasDrawn = false;
+
+        // 打亂陣列順序的函數
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        // 初始化或重新分配禮物到資料夾
+        function initializePrizes() {
+            const shuffledPrizes = shuffleArray(allPrizes);
+            prizes = {
+                1: shuffledPrizes[0],
+                2: shuffledPrizes[1],
+                3: shuffledPrizes[2]
+            };
+            updateDebugInfo();
+        }
+
+        // 更新偷偷看資訊
+        function updateDebugInfo() {
+            const debugContent = document.getElementById('debugContent');
+            debugContent.innerHTML = `
+                資料夾 1: ${prizes[1].icon} ${prizes[1].name}<br>
+                資料夾 2: ${prizes[2].icon} ${prizes[2].name}<br>
+                資料夾 3: ${prizes[3].icon} ${prizes[3].name}
+            `;
+        }
+
+        // 切換偷偷看顯示
+        function toggleDebug() {
+            const debugInfo = document.getElementById('debugInfo');
+            debugInfo.classList.toggle('show');
+        }
+
+        // 頁面載入時初始化
+        initializePrizes();
+
+        function drawPrize(folderNumber) {
+            if (hasDrawn) {
+                return;
+            }
+
+            const resultElement = document.getElementById('result');
+
+            // 直接取得該資料夾的固定禮物
+            const selectedPrize = prizes[folderNumber];
+
+            // 顯示結果
+            resultElement.innerHTML = `
+                <span class="prize-icon">${selectedPrize.icon}</span>
+                恭喜！您抽到了<br>
+                <strong>${selectedPrize.name}</strong>
+                <br><br>
+                <button class="reset-btn" onclick="resetDraw()">再抽一次</button>
+            `;
+
+            resultElement.className = `result ${selectedPrize.type} show`;
+            hasDrawn = true;
+
+            // 禁用所有資料夾按鈕
+            const folders = document.querySelectorAll('.folder');
+            folders.forEach(folder => {
+                folder.style.opacity = '0.5';
+                folder.style.pointerEvents = 'none';
+            });
+        }
+
+        function resetDraw() {
+            const resultElement = document.getElementById('result');
+            resultElement.className = 'result';
+            resultElement.innerHTML = '';
+            hasDrawn = false;
+
+            // 重新打亂禮物分配
+            initializePrizes();
+
+            // 重新啟用所有資料夾按鈕
+            const folders = document.querySelectorAll('.folder');
+            folders.forEach(folder => {
+                folder.style.opacity = '1';
+                folder.style.pointerEvents = 'auto';
+            });
+        }
+    </script>
+</body>
+
+</html>
