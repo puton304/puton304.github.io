@@ -56,26 +56,18 @@
         // 頁面載入時初始化
         initializePrizes();
 
+        let steps = 0; // 控制提示階段
+        let currentPrize = null; // 暫存壽星選到的獎品
+
         function drawPrize(folderNumber) {
-            if (hasDrawn) {
-                return;
-            }
+            if (hasDrawn) return;
 
             const resultElement = document.getElementById('result');
+            currentPrize = prizes[folderNumber]; // 先記住壽星選的獎品
+            steps = 0; // 從第一層開始
+                
+            showStep(resultElement);
 
-            // 直接取得該資料夾的固定禮物
-            const selectedPrize = prizes[folderNumber];
-
-            // 顯示結果
-            resultElement.innerHTML = `
-                <span class="prize-icon">${selectedPrize.icon}</span>
-                恭喜！您抽到了<br>
-                <strong>${selectedPrize.name}</strong>
-                <br><br>
-                <button class="reset-btn" onclick="resetDraw()">再抽一次</button>
-            `;
-
-            resultElement.className = `result ${selectedPrize.type} show`;
             hasDrawn = true;
 
             // 禁用所有資料夾按鈕
@@ -86,16 +78,51 @@
             });
         }
 
+        function showStep(resultElement) {
+            const messages = ["繼續...", "再一次...", "快抽到了..."];
+
+            if (steps < messages.length) {
+                // 還在提示階段
+                resultElement.innerHTML = `
+                    <p style="font-size:18px;font-weight:bold;">${messages[steps]}</p>
+                    <button class="reset-btn" onclick="nextStep()">點我</button>
+                `;
+                resultElement.className = `result show consolation`; // 統一用藍色背景提示
+            } else {
+                // 最後顯示獎品
+                if (currentPrize.type === "prize") {
+                    resultElement.innerHTML = `
+                        <span class="prize-icon">${currentPrize.icon}</span>
+                        🎉 恭喜！您抽到了<br>
+                        <strong>${currentPrize.name}</strong>
+                        <br><br>
+                        <button class="reset-btn" onclick="resetDraw()">再抽一次</button>
+                    `;
+                    resultElement.className = `result ${currentPrize.type} show`;
+                } else {
+                    resultElement.innerHTML = `
+                        <span class="prize-icon">${currentPrize.icon}</span>
+                        😅 很可惜！您抽到的是<br>
+                        <strong>${currentPrize.name}</strong>
+                        <br><br>
+                    `;
+                    resultElement.className = `result ${currentPrize.type} show`;
+                }
+            }
+        }
+
+        function nextStep() {
+            const resultElement = document.getElementById('result');
+            steps++;
+            showStep(resultElement);
+        }
+
         function resetDraw() {
             const resultElement = document.getElementById('result');
             resultElement.className = 'result';
             resultElement.innerHTML = '';
-            hasDrawn = false;
-
-            // 重新打亂禮物分配
-            initializePrizes();
-
-            // 重新啟用所有資料夾按鈕
+            hasDrawn = false; // 重新打亂禮物分配 
+            initializePrizes(); // 重新啟用所有資料夾按鈕
             const folders = document.querySelectorAll('.folder');
             folders.forEach(folder => {
                 folder.style.opacity = '1';
