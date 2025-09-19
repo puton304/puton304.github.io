@@ -25,9 +25,9 @@ let currentState = 0;
             switch (currentState) {
                 case 0:
                     html = `
-                        <button class="flow-btn" onclick="nextState('big')">大禮物</button>
-                        <button class="flow-btn" onclick="nextState('small')">小禮物</button>
-                        <button class="flow-btn" onclick="nextState('both')">兩個都要</button>`;
+                        <button class="flow-btn" onclick="nextState('big')">這是大禮物</button>
+                        <button class="flow-btn" onclick="nextState('small')">這是小禮物</button>
+                        <button class="flow-btn" onclick="nextState('both')">這是兩個都要</button>`;
                     break;
 
                 case 1:
@@ -57,7 +57,26 @@ let currentState = 0;
                     html = `
                     <div class="final-prize">
                         <span class="prize-icon">🎉🍽️</span>
-                        <p>生日快樂！</p>
+                        <p>Anyway 生日快樂！</p>
+                        <p><strong>恭喜獲得：大餐一頓</strong></p>
+                        <p class="note">P.S. 金額新台幣 1000 元，不限次數，用完為止</p>
+                    </div>`;
+                    break;
+
+                case 6:
+                    html = `
+                    <button class="flow-btn" onclick="nextState('final')">確定要大禮物</button>
+                    <button class="flow-btn" onclick="nextState('change')">要換小禮物</button>`;
+                    break;
+                case 7:
+                    html = `
+                    <button class="flow-btn" onclick="nextState('final')">確定要小禮物</button>
+                    <button class="flow-btn" onclick="nextState('change')">要換大禮物</button>`;
+                    break;
+                case 8:
+                    html = `
+                    <div class="final-prize">
+                        <span class="prize-icon">🎉🍽️</span>
                         <p><strong>恭喜獲得：大餐一頓</strong></p>
                         <p class="note">P.S. 金額新台幣 1000 元，不限次數，用完為止</p>
                     </div>`;
@@ -74,14 +93,18 @@ let currentState = 0;
                 currentState = 1;
             } else if (choice === "yes" || choice === "no") {
                 currentState = 2;
-            } else if (choice === "yes-final") {
+            } else if (choice === "yes-final" || choice === "change") {
                 currentState = 3;
             } else if (choice === "no-final") {
                 currentState = 4;
             } else if (choice === "anyway") {
                 currentState = 5;
+            } else if (choice === "big") {
+                currentState = 6;
+            } else if (choice === "small") {
+                currentState = 7;
             } else {
-                currentState = 5; // 預設直接到最後
+                currentState = 8; // 預設直接到最後
             }
             showState();
         }
