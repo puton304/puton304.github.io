@@ -1,4 +1,4 @@
-        let currentState = 0;
+let currentState = 0;
         let folderName = "";
 
         // 使用者點資料夾
@@ -7,12 +7,12 @@
             const resultElement = document.getElementById('result');
             resultElement.classList.remove('show'); // reset
 
-            // 禁用所有資料夾
+            // 資料夾移除
             const folders = document.querySelectorAll('.folder');
             folders.forEach(folder => {
-                folder.style.opacity = '0.5';
-                folder.style.pointerEvents = 'none';
+                folder.remove()
             });
+            document.querySelector('.result').style.marginTop = "0";
 
             setTimeout(() => showState(), 50);
         }
