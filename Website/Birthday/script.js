@@ -1,131 +1,87 @@
-// 所有可能的禮物
-        const allPrizes = [{
-            name: "餐券一張",
-            icon: "🍽️",
-            type: "prize"
-        }, {
-            name: "行動電源",
-            icon: "🔋",
-            type: "prize"
-        }, {
-            name: "銘謝惠顧",
-            icon: "💝",
-            type: "consolation"
-        }];
+        let currentState = 0;
+        let folderName = "";
 
-        let prizes = {};
-        let hasDrawn = false;
-
-        // 打亂陣列順序的函數
-        function shuffleArray(array) {
-            const shuffled = [...array];
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-            return shuffled;
-        }
-
-        // 初始化或重新分配禮物到資料夾
-        function initializePrizes() {
-            const shuffledPrizes = shuffleArray(allPrizes);
-            prizes = {
-                1: shuffledPrizes[0],
-                2: shuffledPrizes[1],
-                3: shuffledPrizes[2]
-            };
-            updateDebugInfo();
-        }
-
-        // 更新偷偷看資訊
-        function updateDebugInfo() {
-            const debugContent = document.getElementById('debugContent');
-            debugContent.innerHTML = `
-                資料夾 1: ${prizes[1].icon} ${prizes[1].name}<br>
-                資料夾 2: ${prizes[2].icon} ${prizes[2].name}<br>
-                資料夾 3: ${prizes[3].icon} ${prizes[3].name}
-            `;
-        }
-
-        // 切換偷偷看顯示
-        function toggleDebug() {
-            const debugInfo = document.getElementById('debugInfo');
-            debugInfo.classList.toggle('show');
-        }
-
-        // 頁面載入時初始化
-        initializePrizes();
-
-        let steps = 0; // 控制提示階段
-        let currentPrize = null; // 暫存壽星選到的獎品
-
+        // 使用者點資料夾
         function drawPrize(folderNumber) {
-            if (hasDrawn) return;
-
+            currentState = 0;
             const resultElement = document.getElementById('result');
-            currentPrize = prizes[folderNumber]; // 先記住壽星選的獎品
-            steps = 0; // 從第一層開始
-                
-            showStep(resultElement);
+            resultElement.classList.remove('show'); // reset
 
-            hasDrawn = true;
-
-            // 禁用所有資料夾按鈕
+            // 禁用所有資料夾
             const folders = document.querySelectorAll('.folder');
             folders.forEach(folder => {
                 folder.style.opacity = '0.5';
                 folder.style.pointerEvents = 'none';
             });
+
+            setTimeout(() => showState(), 50);
         }
 
-        function showStep(resultElement) {
-            const messages = ["繼續...", "再一次...", "快抽到了..."];
+        // 狀態流程
+        function showState(choice = null) {
+            const resultElement = document.getElementById('result');
+            let html = "";
 
-            if (steps < messages.length) {
-                // 還在提示階段
-                resultElement.innerHTML = `
-                    <p style="font-size:18px;font-weight:bold;">${messages[steps]}</p>
-                    <button class="reset-btn" onclick="nextStep()">點我</button>
-                `;
-                resultElement.className = `result show consolation`; // 統一用藍色背景提示
-            } else {
-                // 最後顯示獎品
-                if (currentPrize.type === "prize") {
-                    resultElement.innerHTML = `
-                        <span class="prize-icon">${currentPrize.icon}</span>
-                        🎉 恭喜！您抽到了<br>
-                        <strong>${currentPrize.name}</strong>
-                        <br><br>
-                        <button class="reset-btn" onclick="resetDraw()">再抽一次</button>
-                    `;
-                    resultElement.className = `result ${currentPrize.type} show`;
-                } else {
-                    resultElement.innerHTML = `
-                        <span class="prize-icon">${currentPrize.icon}</span>
-                        😅 很可惜！您抽到的是<br>
-                        <strong>${currentPrize.name}</strong>
-                        <br><br>
-                    `;
-                    resultElement.className = `result ${currentPrize.type} show`;
-                }
+            switch (currentState) {
+                case 0:
+                    html = `
+                        <button class="flow-btn" onclick="nextState('big')">大禮物</button>
+                        <button class="flow-btn" onclick="nextState('small')">小禮物</button>
+                        <button class="flow-btn" onclick="nextState('both')">兩個都要</button>`;
+                    break;
+
+                case 1:
+                    html = `<p>你太貪心了</p>
+                    <p>需要再給你一次選擇機會嗎？</p>
+                    <button class="flow-btn" onclick="nextState('yes')">Yes</button>
+                    <button class="flow-btn" onclick="nextState('no')">No</button>`;
+                    break;
+
+                case 2:
+                    html = `<p>你確定嗎？</p>
+                    <button class="flow-btn" onclick="nextState('yes-final')">Yes</button>
+                    <button class="flow-btn" onclick="nextState('no-final')">No</button>`;
+                    break;
+
+                case 3:
+                    html = `<p>人生有很多事是不能反悔的</p>
+                    <button class="flow-btn" onclick="nextState('anyway')">Next</button>`;
+                    break;
+
+                case 4:
+                    html = `<p>你到底要怎樣</p>
+                    <button class="flow-btn" onclick="nextState('anyway')">Next</button>`;
+                    break;
+
+                case 5:
+                    html = `
+                    <div class="final-prize">
+                        <span class="prize-icon">🎉🍽️</span>
+                        <p>生日快樂！</p>
+                        <p><strong>恭喜獲得：大餐一頓</strong></p>
+                        <p class="note">P.S. 金額新台幣 1000 元，不限次數，用完為止</p>
+                    </div>`;
+                    break;
             }
+
+            resultElement.innerHTML = html;
+            resultElement.classList.add('show'); // 顯示結果
         }
 
-        function nextStep() {
-            const resultElement = document.getElementById('result');
-            steps++;
-            showStep(resultElement);
-        }
-
-        function resetDraw() {
-            const resultElement = document.getElementById('result');
-            resultElement.className = 'result';
-            resultElement.innerHTML = '';
-            hasDrawn = false; // 重新打亂禮物分配 
-            initializePrizes(); // 重新啟用所有資料夾按鈕
-            const folders = document.querySelectorAll('.folder');
-            folders.forEach(folder => {
-                folder.style.opacity = '1';
-                folder.style.pointerEvents = 'auto';
-            });
+        // 控制下一步
+        function nextState(choice) {
+            if (choice === "both") {
+                currentState = 1;
+            } else if (choice === "yes" || choice === "no") {
+                currentState = 2;
+            } else if (choice === "yes-final") {
+                currentState = 3;
+            } else if (choice === "no-final") {
+                currentState = 4;
+            } else if (choice === "anyway") {
+                currentState = 5;
+            } else {
+                currentState = 5; // 預設直接到最後
+            }
+            showState();
         }
