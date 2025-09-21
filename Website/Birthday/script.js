@@ -29,30 +29,25 @@ let currentState = 0;
                         <button class="flow-btn" onclick="nextState('small')">這是小禮物</button>
                         <button class="flow-btn" onclick="nextState('both')">這是兩個都要</button>`;
                     break;
-
                 case 1:
                     html = `<p>你太貪心了</p>
                     <p>需要再給你一次選擇機會嗎？</p>
                     <button class="flow-btn" onclick="nextState('yes')">Yes</button>
                     <button class="flow-btn" onclick="nextState('no')">No</button>`;
                     break;
-
                 case 2:
                     html = `<p>你確定嗎？</p>
                     <button class="flow-btn" onclick="nextState('yes-final')">Yes</button>
                     <button class="flow-btn" onclick="nextState('no-final')">No</button>`;
                     break;
-
                 case 3:
                     html = `<p>人生有很多事是不能反悔的</p>
                     <button class="flow-btn" onclick="nextState('anyway')">Next</button>`;
                     break;
-
                 case 4:
                     html = `<p>你到底要怎樣</p>
                     <button class="flow-btn" onclick="nextState('anyway')">Next</button>`;
                     break;
-
                 case 5:
                     html = `
                     <div class="final-prize">
@@ -62,16 +57,15 @@ let currentState = 0;
                         <p class="note">P.S. 金額新台幣 1000 元，不限次數，用完為止</p>
                     </div>`;
                     break;
-
                 case 6:
                     html = `
-                    <button class="flow-btn" onclick="nextState('final')">確定要大禮物</button>
-                    <button class="flow-btn" onclick="nextState('change')">要換小禮物</button>`;
+                    <button class="flow-btn" onclick="nextState('final')">確定要大禮物嗎？</button>
+                    <button class="flow-btn" onclick="nextState('change')">我突然想要換小禮物</button>`;
                     break;
                 case 7:
                     html = `
-                    <button class="flow-btn" onclick="nextState('final')">確定要小禮物</button>
-                    <button class="flow-btn" onclick="nextState('change')">要換大禮物</button>`;
+                    <button class="flow-btn" onclick="nextState('final')">確定要小禮物嗎？</button>
+                    <button class="flow-btn" onclick="nextState('change')">我突然想要換大禮物</button>`;
                     break;
                 case 8:
                     html = `
