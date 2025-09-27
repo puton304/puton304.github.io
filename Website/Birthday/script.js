@@ -1,5 +1,4 @@
-let currentState = 0;
-        let folderName = "";
+        let currentState = 0;
 
         // 使用者點資料夾
         function drawPrize(folderNumber) {
@@ -7,12 +6,10 @@ let currentState = 0;
             const resultElement = document.getElementById('result');
             resultElement.classList.remove('show'); // reset
 
-            // 資料夾移除
+            // 移除資料夾
             const folders = document.querySelectorAll('.folder');
-            folders.forEach(folder => {
-                folder.remove()
-            });
-            document.querySelector('.result').style.marginTop = "0";
+            folders.forEach(folder => folder.remove());
+            document.querySelector('.folders-container').style.marginBottom = "0";
 
             setTimeout(() => showState(), 50);
         }
@@ -25,68 +22,89 @@ let currentState = 0;
             switch (currentState) {
                 case 0:
                     html = `
-                        <button class="flow-btn" onclick="nextState('big')">這是大禮物</button>
-                        <button class="flow-btn" onclick="nextState('small')">這是小禮物</button>
-                        <button class="flow-btn" onclick="nextState('both')">這是兩個都要</button>`;
+            <button class="flow-btn" onclick="nextState('big')">這是大禮物</button>
+            <button class="flow-btn" onclick="nextState('small')">這是小禮物</button>
+            <button class="flow-btn" onclick="nextState('both')">這是兩個都要</button>`;
                     break;
 
                 case 1:
                     html = `<p>你太貪心了</p>
-                    <p>需要再給你一次選擇機會嗎？</p>
-                    <button class="flow-btn" onclick="nextState('yes')">Yes</button>
-                    <button class="flow-btn" onclick="nextState('no')">No</button>`;
+                  <p>需要再給你一次選擇機會嗎？</p>
+                  <button class="flow-btn" onclick="nextState('yes')">Yes</button>
+                  <button class="flow-btn" onclick="nextState('no')">No</button>`;
                     break;
 
                 case 2:
                     html = `<p>你確定嗎？</p>
-                    <button class="flow-btn" onclick="nextState('yes-final')">Yes</button>
-                    <button class="flow-btn" onclick="nextState('no-final')">No</button>`;
+                  <button class="flow-btn" onclick="nextState('yes-final')">Yes</button>
+                  <button class="flow-btn" onclick="nextState('no-final')">No</button>`;
                     break;
 
                 case 3:
                     html = `<p>人生有很多事是不能反悔的</p>
-                    <button class="flow-btn" onclick="nextState('anyway')">Next</button>`;
+                  <button class="flow-btn" onclick="nextState('anyway')">Next</button>`;
                     break;
 
                 case 4:
                     html = `<p>你到底要怎樣</p>
-                    <button class="flow-btn" onclick="nextState('anyway')">Next</button>`;
+                  <button class="flow-btn" onclick="nextState('anyway')">Next</button>`;
                     break;
 
                 case 5:
                     html = `
-                    <div class="final-prize">
+            <div class="final-prize">
+                <div class="prize-content">
+                    <div class="prize-icon-wrapper">
                         <span class="prize-icon">🍽️</span>
-                        <p>Anyway 生日快樂！</p>
+                    </div>
+                    <div class="prize-text">
+                        <p>Anyway 生日快樂</p>
                         <p><strong>恭喜獲得：大餐一頓</strong></p>
                         <p class="note">P.S. 金額新台幣 1000 元，不限次數，用完為止</p>
-                    </div>`;
+                    </div>
+                </div>
+                <div class="prize-image">
+                    <img src="back2.jpg" alt="大餐一頓">
+                </div>
+            </div>`;
                     startConfettiLoop();
                     break;
 
                 case 6:
                     html = `
-                    <button class="flow-btn" onclick="nextState('final')">確定要大禮物嗎？</button>
-                    <button class="flow-btn" onclick="nextState('change')">我突然想要換小禮物</button>`;
+            <button class="flow-btn" onclick="nextState('final')">確定要大禮物嗎？</button>
+            <button class="flow-btn" onclick="nextState('change')">我突然想要換小禮物</button>`;
                     break;
+
                 case 7:
                     html = `
-                    <button class="flow-btn" onclick="nextState('final')">確定要小禮物嗎？</button>
-                    <button class="flow-btn" onclick="nextState('change')">我突然想要換大禮物</button>`;
+            <button class="flow-btn" onclick="nextState('final')">確定要小禮物嗎？</button>
+            <button class="flow-btn" onclick="nextState('change')">我突然想要換大禮物</button>`;
                     break;
+
                 case 8:
                     html = `
-                    <div class="final-prize">
+            <div class="final-prize">
+                <div class="prize-content">
+                    <div class="prize-icon-wrapper">
                         <span class="prize-icon">🍽️</span>
+                    </div>
+                    <div class="prize-text">
+                        <p>生日快樂</p>
                         <p><strong>恭喜獲得：大餐一頓</strong></p>
                         <p class="note">P.S. 金額新台幣 1000 元，不限次數，用完為止</p>
-                    </div>`;
+                    </div>
+                </div>
+                <div class="prize-image">
+                    <img src="back2.jpg" alt="大餐一頓">
+                </div>
+            </div>`;
                     startConfettiLoop();
                     break;
             }
 
             resultElement.innerHTML = html;
-            resultElement.classList.add('show'); // 顯示結果
+            resultElement.classList.add('show');
         }
 
         // 控制下一步
@@ -106,7 +124,7 @@ let currentState = 0;
             } else if (choice === "small") {
                 currentState = 7;
             } else {
-                currentState = 8; // 預設直接到最後
+                currentState = 8;
             }
             showState();
         }
@@ -114,10 +132,8 @@ let currentState = 0;
         let confettiInterval;
 
         function startConfettiLoop() {
-            // 如果已經有在跑，避免重複 setInterval
             if (confettiInterval) return;
 
-            // 每 2.5 秒噴一次
             confettiInterval = setInterval(() => {
                 confetti({
                     particleCount: 100,
@@ -128,7 +144,6 @@ let currentState = 0;
                 });
             }, 2500);
 
-            // 先馬上噴一次
             confetti({
                 particleCount: 120,
                 spread: 90,
