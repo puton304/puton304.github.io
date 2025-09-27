@@ -1,4 +1,4 @@
-* {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -6,8 +6,7 @@
         
         body {
             font-family: 'Arial', '微軟正黑體', sans-serif;
-            background: #f9f9bb;
-            /* 米黃色 */
+            background-image: url("back1.jpg");
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -17,11 +16,9 @@
         }
         
         .container {
-            background: white;
             border-radius: 20px;
             padding: 30px;
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             max-width: 400px;
             width: 100%;
             position: relative;
@@ -29,7 +26,7 @@
         
         .title {
             font-size: 28px;
-            color: #333;
+            color: #000;
             margin-bottom: 25px;
             font-weight: bold;
         }
@@ -39,21 +36,22 @@
             justify-content: space-around;
             flex-wrap: wrap;
             gap: 15px;
+            margin-bottom: 30px;
         }
         
         .folder {
-            background: linear-gradient(45deg, #d16ba5, #ff758c);
             border: none;
             border-radius: 15px;
-            padding: 15px;
+            padding: 30px 15px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 14px;
-            color: white;
-            /* 文字改白色 */
+            color: black;
             font-weight: bold;
             min-width: 100px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background-size: cover;
+            background-position: center;
         }
         
         .folder:hover {
@@ -61,9 +59,24 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
         
+        .fold-1 {
+            background-image: url("p1.jpg");
+        }
+        
+        .fold-2 {
+            background-image: url("p2.jpg");
+        }
+        
+        .fold-3 {
+            background-image: url("p3.jpg");
+        }
+        
+        .fold-4 {
+            background-image: url("p4.jpg");
+        }
+        
         .result {
-            margin-top: 30px;
-            padding: 20px;
+            padding: 0px 20px;
             border-radius: 15px;
             font-size: 18px;
             font-weight: bold;
@@ -75,22 +88,6 @@
         .result.show {
             opacity: 1;
             transform: translateY(0);
-        }
-        
-        .result.prize {
-            background: linear-gradient(45deg, #d16ba5, #ff758c);
-            color: white;
-        }
-        
-        .result.consolation {
-            background: linear-gradient(45deg, #4facfe, #00f2fe);
-            color: white;
-        }
-        
-        .prize-icon {
-            font-size: 48px;
-            margin-bottom: 10px;
-            display: block;
         }
         
         @media (max-width: 480px) {
@@ -111,7 +108,7 @@
         }
         
         .flow-btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: linear-gradient(45deg, #b03060, #6d0019);
             color: white;
             border: none;
             padding: 10px 20px;
@@ -133,29 +130,47 @@
         }
         
         .final-prize {
-            background: linear-gradient(45deg, #d16ba5, #ff758c);
             border-radius: 20px;
-            padding: 25px;
+            overflow: hidden;
             animation: popIn 0.8s ease forwards;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .prize-content {
+            padding: 0 20px;
             color: #000;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
         }
         
-        .final-prize .prize-icon {
+        .prize-icon-wrapper {
             font-size: 60px;
-            display: block;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            animation: swing 1s infinite alternate;
         }
         
-        .final-prize p {
-            margin: 10px 0;
-            font-size: 18px;
+        .prize-text p {
+            margin: 5px 0;
+            font-size: 20px;
         }
         
-        .final-prize .note {
-            font-size: 14px;
+        .prize-text .note {
             opacity: 0.9;
-            margin-top: 10px;
+        }
+        
+        .prize-image img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        
+        @keyframes swing {
+            from {
+                transform: rotate(-10deg);
+            }
+            to {
+                transform: rotate(10deg);
+            }
         }
         
         @keyframes popIn {
