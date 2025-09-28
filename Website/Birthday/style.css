@@ -45,7 +45,7 @@
             padding: 30px 15px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 14px;
+            font-size: 18px;
             color: black;
             font-weight: bold;
             min-width: 100px;
@@ -96,13 +96,12 @@
             }
             .folder {
                 width: 80%;
-                max-width: 150px;
             }
         }
         
         img {
-            width: 120px;
-            height: 120px;
+            width: 200px;
+            height: 200px;
             border-radius: 10px;
             margin-bottom: 8px;
         }
@@ -182,4 +181,22 @@
                 transform: scale(1);
                 opacity: 1;
             }
+        }
+        
+        #music-toggle {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 1);
+            border: none;
+            border-radius: 50%;
+            font-size: 22px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            transition: all 0.3s ease;
         }
