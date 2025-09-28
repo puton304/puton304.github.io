@@ -152,3 +152,23 @@
                 }
             });
         }
+        window.addEventListener("DOMContentLoaded", () => {
+            const music = document.getElementById("bg-music");
+            const toggleBtn = document.getElementById("music-toggle");
+
+            // 啟動時解除靜音並設定音量
+            music.muted = false;
+            music.volume = 0.1;
+            music.play();
+
+            // 控制開關
+            toggleBtn.addEventListener("click", () => {
+                if (music.paused) {
+                    music.play();
+                    toggleBtn.textContent = "🔊"; // 音樂開
+                } else {
+                    music.pause();
+                    toggleBtn.textContent = "🔇"; // 音樂關
+                }
+            });
+        });
